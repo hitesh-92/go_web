@@ -5,25 +5,25 @@ import (
 	"net/http"
 )
 
-type testing int
+type home int
 
-func (t testing) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (h home) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	io.WriteString(w, "Welcome Home!!! This is better!")
+}
 
-	switch req.URL.Path {
+type about int
 
-	case "/":
-		io.WriteString(w, "check out: /home or /about")
-
-	case "/about":
-		io.WriteString(w, "About Us. This is for routing!")
-
-	case "/home":
-		io.WriteString(w, "Welcome Home! Nice to be back?")
-
-	}
+func (a about) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	io.WriteString(w, "About. Well Theres still alot we dont know about")
 }
 
 func main() {
-	var a testing
-	http.ListenAndServe(":8080", a)
+	var h home
+	var a about
+
+	mux := http.NewServeMux()
+	mux.Handle("/", h)
+	mux.Handle("/about", a)
+
+	http.ListenAndServe(":8080", mux)
 }
