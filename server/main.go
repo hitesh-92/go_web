@@ -1,46 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"net"
+	"net/http"
 )
 
-func main() {
+type testing int
 
-	li, err := net.Listen("tcp", ":8080")
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	defer li.Close()
-
-	for {
-
-		conn, err := li.Accept()
-
-		if err != nil {
-			log.Println(err)
-		}
-
-		go handle(conn)
-	}
+func (t testing) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Just testing for now")
 }
 
-func handle(conn net.Conn) {
-
-	scanner := bufio.NewScanner(conn)
-
-	//prints out connection
-	for scanner.Scan() {
-		ln := scanner.Text()
-		fmt.Println(ln)
-	}
-
-	defer conn.Close()
-
-	// fmt.Println("Heres code")
-
+func main() {
+	var t testing
+	http.ListenAndServe(":8080", t)
 }
