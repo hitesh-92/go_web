@@ -34,7 +34,7 @@ func me(w http.ResponseWriter, req *http.Request) {
 func main() {
 	http.HandleFunc("/", root)
 	http.HandleFunc("/dog", dog)
-	http.HandleFunc("/me", me)
+	http.Handle("/me/", http.HandlerFunc(me))
 
 	http.ListenAndServe(":8080", nil)
 }
